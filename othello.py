@@ -191,11 +191,19 @@ class Othello:
                                (105,
                                 150),
                                self.board.radius * 2)
+            if self.player_1['AI']:
+                font = pygame.font.SysFont(None, 24)
+                img = font.render('AI', True, (0, 0, 0))
+                screen.blit(img, (105 - self.board.radius//2, 150 - self.board.radius//2))
         else:
             pygame.draw.circle(screen, self.player_2["color"],
                                (105,
                                 150),
                                self.board.radius * 2)
+            if self.player_2['AI']:
+                font = pygame.font.SysFont(None, 24)
+                img = font.render('AI', True, (255, 255, 255))
+                screen.blit(img, (105 - self.board.radius//2, 150 - self.board.radius//2))
 
     def init_game_background(self, screen):
         fond = pygame.image.load('assets/background.png')
