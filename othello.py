@@ -66,8 +66,17 @@ class Othello:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
-                    self.game_state = GAME_STATES["PLAYING"]
-                    self.playing_othello(screen)
+                    mouse_position = event.pos
+                    if 184 <= mouse_position[0] <= 286 and 245 <= mouse_position[1] <= 352:
+                        self.player_1['AI'] = True
+                        self.player_2['AI'] = False
+                        self.game_state = GAME_STATES["PLAYING"]
+                        self.playing_othello(screen)
+                    if 714 <= mouse_position[0] <= 820 and 248 <= mouse_position[1] <= 357:
+                        self.player_1['AI'] = False
+                        self.player_2['AI'] = True
+                        self.game_state = GAME_STATES["PLAYING"]
+                        self.playing_othello(screen)
 
     def playing_othello(self, screen):
         self.init_game_background(screen)
@@ -78,14 +87,17 @@ class Othello:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
-                    mouse_position = event.pos
-                    # Check If the click is inside the board
-                    if self.is_valid_click(mouse_position):
-                        self.play_once(mouse_position, screen)  # Playing process
-                        self.display_available_move(screen, self.current_player)
-                        if not self.board.available_moves:
-                            self.game_state = GAME_STATES["ENDING"]
-                            self.ending_othello(screen)
+                    if self.current_player == 1 and not self.player_1["AI"]:
+                        mouse_position = event.pos
+                        # Check If the click is inside the board
+                        if self.is_valid_click(mouse_position):
+                            self.play_once(mouse_position, screen)  # Playing process
+                            self.display_available_move(screen, self.current_player)
+                            if not self.board.available_moves:
+                                self.game_state = GAME_STATES["ENDING"]
+                                self.ending_othello(screen)
+                    else:
+                        print("WAIT, NOW IT IS AI TURN")
                 pygame.display.update()
 
     def ending_othello(self, screen):
@@ -103,13 +115,12 @@ class Othello:
             self.game_state = GAME_STATES["P2WON"]
         else:
             self.game_state = GAME_STATES["DRAW"]
-            
+
         fond = pygame.image.load(f'assets/{self.game_state}.png')
         fond = fond.convert()
         screen.blit(fond, (0, 0))
         pygame.display.flip()
         pygame.display.update()
-
 
     def is_valid_click(self, mouse_position):
         return self.top_board_side <= mouse_position[1] <= self.bottom_board_side and \
@@ -177,14 +188,14 @@ class Othello:
     def change_player_indicator(self, screen):
         if self.current_player == 1:
             pygame.draw.circle(screen, self.player_1["color"],
-                               (self.board.radius,
-                                self.board.radius),
-                               self.board.radius)
+                               (105,
+                                150),
+                               self.board.radius * 2)
         else:
             pygame.draw.circle(screen, self.player_2["color"],
-                               (self.board.radius,
-                                self.board.radius),
-                               self.board.radius)
+                               (105,
+                                150),
+                               self.board.radius * 2)
 
     def init_game_background(self, screen):
         fond = pygame.image.load('assets/background.png')
