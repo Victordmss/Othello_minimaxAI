@@ -13,6 +13,10 @@ class Board:
         self.radius = int(self.box_size / 2 - 5)
         self.board_size = (self.row_count * self.box_size, self.column_count * self.box_size)
         self.available_moves = []
+        self.left_board_side = 500 - (self.box_size * self.column_count) // 2
+        self.top_board_side = 300 - (self.box_size * self.row_count) // 2
+        self.bottom_board_side = 300 + (self.box_size * self.row_count) // 2
+        self.right_board_side = 500 + (self.box_size * self.column_count) / 2
 
     def is_there_valid_move(self, row, col, next_player_key, last_player_key):
         if self.grid[row][col] == next_player_key:
@@ -30,6 +34,10 @@ class Board:
 
     def overflow(self, x, y):
         return not (0 <= x <= self.column_count - 1 and 0 <= y <= self.row_count - 1)
+
+    def is_clicked(self, mouse_position):
+        return self.top_board_side <= mouse_position[1] <= self.bottom_board_side and \
+            self.left_board_side <= mouse_position[0] <= self.right_board_side
 
     def update_grid(self, row_click, column_click, current_player):
         valid_move = False
@@ -55,3 +63,7 @@ class Board:
                         y -= y_direction
                         self.grid[x][y] = current_player
         return valid_move
+
+    def reset_board(self):
+        self.grid = np.zeros((self.row_count, self.column_count))
+

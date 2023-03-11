@@ -1,6 +1,6 @@
 import numpy as np
 import pygame
-
+from button import Button
 from board import Board
 
 GAME_STATES = {"LAUNCHING": 'launching',
@@ -8,7 +8,8 @@ GAME_STATES = {"LAUNCHING": 'launching',
                "ENDING": 'ending',
                "P1WON": "p1won",
                "P2WON": "p2won",
-               "DRAW": "draw"}
+               "DRAW": "draw",
+               "REVIEW": "review", }
 
 
 def round_click_pos(click):
@@ -37,29 +38,30 @@ class Othello:
         self.player_1 = {"key": 1, "color": (255, 255, 255), "AI": False}
         self.player_2 = {"key": 2, "color": (0, 0, 0), "AI": True}
         self.current_player = self.player_1["key"]
-        self.game_over = False
         self.game_state = GAME_STATES["LAUNCHING"]
+
+        # Buttons
+        # Launching buttons
+        self.black_button = Button(184, 245, 352, 286)
+        self.white_button = Button(714, 248, 357, 820)
+        # Playing buttons
+        self.reset_button = Button(13, 456, 518, 198)
+        # Ending buttons
+        self.review_button = Button(13, 528, 586, 198)
 
         # Creating board
         self.row_count = row_count
         self.column_count = column_count
         self.board = Board(self.row_count, self.column_count, (89, 139, 44))
-        self.left_board_side = 500 - (self.board.box_size * self.column_count) // 2
-        self.top_board_side = 300 - (self.board.box_size * self.row_count) // 2
-        self.bottom_board_side = 300 + (self.board.box_size * self.row_count) // 2
-        self.right_board_side = 500 + (self.board.box_size * self.column_count) / 2
 
+        # Initialisation of the game
         pygame.init()
         screen = pygame.display.set_mode((1000, 600))
         pygame.display.set_caption('Abalone')
         self.launching_othello(screen)
 
     def launching_othello(self, screen):
-        fond = pygame.image.load('assets/launching_background.png')
-        fond = fond.convert()
-        screen.blit(fond, (0, 0))
-        pygame.display.flip()
-        pygame.display.update()
+        self.update_background(screen)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # Quit the game
@@ -67,16 +69,23 @@ class Othello:
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
                     mouse_position = event.pos
-                    if 184 <= mouse_position[0] <= 286 and 245 <= mouse_position[1] <= 352:
+                    if self.black_button.is_clicked(mouse_position):
                         self.player_1['AI'] = True
                         self.player_2['AI'] = False
                         self.game_state = GAME_STATES["PLAYING"]
                         self.playing_othello(screen)
-                    if 714 <= mouse_position[0] <= 820 and 248 <= mouse_position[1] <= 357:
+                    if self.white_button.is_clicked(mouse_position):
                         self.player_1['AI'] = False
                         self.player_2['AI'] = True
                         self.game_state = GAME_STATES["PLAYING"]
                         self.playing_othello(screen)
+
+    def update_background(self, screen):
+        fond = pygame.image.load(f'assets/{self.game_state}_background.png')
+        fond = fond.convert()
+        screen.blit(fond, (0, 0))
+        pygame.display.flip()
+        pygame.display.update()
 
     def playing_othello(self, screen):
         self.init_game_background(screen)
@@ -87,7 +96,18 @@ class Othello:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
-                    if self.current_player == 1 and not self.player_1["AI"]:
+                    mouse_position = event.pos
+                    print(mouse_position)
+                    # Check If the click is inside the board
+                    if self.reset_button.is_clicked(mouse_position):
+                        self.reset_game(screen)
+                    if self.board.is_clicked(mouse_position):
+                        self.play_once(mouse_position, screen)  # Playing process
+                        self.display_available_move(screen, self.current_player)
+                        if not self.board.available_moves:
+                            self.game_state = GAME_STATES["ENDING"]
+                            self.ending_othello(screen)
+                    """if self.current_player == 1 and not self.player_1["AI"]:
                         mouse_position = event.pos
                         # Check If the click is inside the board
                         if self.is_valid_click(mouse_position):
@@ -97,8 +117,13 @@ class Othello:
                                 self.game_state = GAME_STATES["ENDING"]
                                 self.ending_othello(screen)
                     else:
-                        print("WAIT, NOW IT IS AI TURN")
+                        print("WAIT, NOW IT IS AI TURN")"""
                 pygame.display.update()
+
+    def reset_game(self, screen):
+        self.game_state = GAME_STATES["LAUNCHING"]
+        self.board = Board(self.row_count, self.column_count, (89, 139, 44))
+        self.launching_othello(screen)
 
     def ending_othello(self, screen):
         p1_sum = 0
@@ -115,16 +140,26 @@ class Othello:
             self.game_state = GAME_STATES["P2WON"]
         else:
             self.game_state = GAME_STATES["DRAW"]
+        self.update_background(screen)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # Quit the game
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
+                    mouse_position = event.pos
+                    if self.reset_button.is_clicked(mouse_position):
+                        self.reset_game(screen)
+                    elif self.review_button.is_clicked(mouse_position):
+                        self.review_game(screen)
 
-        fond = pygame.image.load(f'assets/{self.game_state}.png')
-        fond = fond.convert()
-        screen.blit(fond, (0, 0))
-        pygame.display.flip()
+    def review_game(self, screen):
+        self.game_state = GAME_STATES["REVIEW"]
+        self.update_background(screen)
+        self.display_user_color(screen)
+        self.draw_grid(screen)
+        self.update_color_board(screen)
         pygame.display.update()
-
-    def is_valid_click(self, mouse_position):
-        return self.top_board_side <= mouse_position[1] <= self.bottom_board_side and \
-            self.left_board_side <= mouse_position[0] <= self.right_board_side
 
     def display_available_move(self, screen, next_player_key):
         # Generating other_coin_key
@@ -144,8 +179,9 @@ class Othello:
         # Drawing available moves
         for (row, col) in self.board.available_moves:
             pygame.draw.circle(screen, (200, 200, 200),
-                               (self.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
-                                self.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
+                               (
+                               self.board.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
+                               self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
                                self.board.radius // 2)
 
     def reset_available_moves(self, screen):
@@ -164,14 +200,14 @@ class Othello:
 
     def draw_circle(self, col, row, screen, color):
         pygame.draw.circle(screen, color,
-                           (self.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
-                            self.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
+                           (self.board.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
+                            self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
                            self.board.radius)
 
     def play_once(self, mouse_position, screen):
-        column_click = (mouse_position[0] - self.left_board_side) / self.board.box_size / 1.03
+        column_click = (mouse_position[0] - self.board.left_board_side) / self.board.box_size / 1.03
         column_click = round_click_pos(column_click)
-        row_click = (mouse_position[1] - self.top_board_side) / self.board.box_size / 1.03
+        row_click = (mouse_position[1] - self.board.top_board_side) / self.board.box_size / 1.03
         row_click = round_click_pos(row_click)
         if self.board.grid[row_click][column_click] == 0:
             self.board.grid[row_click][column_click] = self.current_player
@@ -191,39 +227,44 @@ class Othello:
                                (105,
                                 150),
                                self.board.radius * 2)
-            if self.player_1['AI']:
-                font = pygame.font.SysFont(None, 24)
-                img = font.render('AI', True, (0, 0, 0))
-                screen.blit(img, (105 - self.board.radius//2, 150 - self.board.radius//2))
         else:
             pygame.draw.circle(screen, self.player_2["color"],
                                (105,
                                 150),
                                self.board.radius * 2)
-            if self.player_2['AI']:
-                font = pygame.font.SysFont(None, 24)
-                img = font.render('AI', True, (255, 255, 255))
-                screen.blit(img, (105 - self.board.radius//2, 150 - self.board.radius//2))
 
     def init_game_background(self, screen):
-        fond = pygame.image.load('assets/background.png')
-        fond = fond.convert()
-        screen.blit(fond, (0, 0))
-        pygame.display.flip()
+        self.update_background(screen)
+        self.display_user_color(screen)
         self.board.grid[3][3] = 1
         self.board.grid[4][4] = 1
         self.board.grid[4][3] = 2
         self.board.grid[3][4] = 2
-        for column in range(self.column_count):
-            for row in range(self.row_count):
-                pygame.draw.rect(screen, self.board.color,
-                                 (self.left_board_side + column * self.board.box_size * 1.03,
-                                  self.top_board_side + self.board.box_size * row * 1.03,
-                                  self.board.box_size,
-                                  self.board.box_size))
+        self.draw_grid(screen)
         self.draw_circle(3, 3, screen, self.player_1["color"])
         self.draw_circle(4, 4, screen, self.player_1["color"])
         self.draw_circle(4, 3, screen, self.player_2["color"])
         self.draw_circle(3, 4, screen, self.player_2["color"])
         self.change_player_indicator(screen)
         pygame.display.update()
+
+    def display_user_color(self, screen):
+        if not self.player_1['AI']:
+            pygame.draw.circle(screen, self.player_1["color"],
+                               (105,
+                                330),
+                               self.board.radius * 2)
+        else:
+            pygame.draw.circle(screen, self.player_2["color"],
+                               (105,
+                                330),
+                               self.board.radius * 2)
+
+    def draw_grid(self, screen):
+        for column in range(self.column_count):
+            for row in range(self.row_count):
+                pygame.draw.rect(screen, self.board.color,
+                                 (self.board.left_board_side + column * self.board.box_size * 1.03,
+                                  self.board.top_board_side + self.board.box_size * row * 1.03,
+                                  self.board.box_size,
+                                  self.board.box_size))
