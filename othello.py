@@ -97,7 +97,6 @@ class Othello:
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
                     mouse_position = event.pos
-                    print(mouse_position)
                     # Check If the click is inside the board
                     if self.reset_button.is_clicked(mouse_position):
                         self.reset_game(screen)
@@ -154,11 +153,22 @@ class Othello:
                         self.review_game(screen)
 
     def review_game(self, screen):
+        winner = self.game_state
         self.game_state = GAME_STATES["REVIEW"]
         self.update_background(screen)
         self.display_user_color(screen)
         self.draw_grid(screen)
         self.update_color_board(screen)
+        if winner == 'p1won':
+            pygame.draw.circle(screen, self.player_1["color"],
+                               (105,
+                                150),
+                               self.board.radius * 2)
+        elif 'p2won':
+            pygame.draw.circle(screen, self.player_2["color"],
+                               (105,
+                                150),
+                               self.board.radius * 2)
         pygame.display.update()
 
     def display_available_move(self, screen, next_player_key):
