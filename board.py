@@ -32,6 +32,33 @@ class Board:
                     if not self.overflow(x, y) and self.grid[x][y] == 0:
                         self.available_moves.append((x, y))
 
+    def count_total_points(self):
+        p1_sum = 0
+        p2_sum = 0
+        for row in range(self.row_count):
+            for col in range(self.column_count):
+                if self.grid[row][col] == 1:
+                    p1_sum += 1
+                elif self.grid[row][col] == 2:
+                    p2_sum += 1
+        return p1_sum, p2_sum
+
+    def count_p1_points(self):
+        p1_sum = 0
+        for row in range(self.row_count):
+            for col in range(self.column_count):
+                if self.grid[row][col] == 1:
+                    p1_sum += 1
+        return p1_sum
+
+    def count_p2_points(self):
+        p2_sum = 0
+        for row in range(self.row_count):
+            for col in range(self.column_count):
+                if self.grid[row][col] == 2:
+                    p2_sum += 1
+        return p2_sum
+
     def overflow(self, x, y):
         return not (0 <= x <= self.column_count - 1 and 0 <= y <= self.row_count - 1)
 

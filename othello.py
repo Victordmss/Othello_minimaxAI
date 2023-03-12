@@ -39,6 +39,7 @@ class Othello:
         self.player_2 = {"key": 2, "color": (0, 0, 0), "AI": True}
         self.current_player = self.player_1["key"]
         self.game_state = GAME_STATES["LAUNCHING"]
+        self.turn_passed = False
 
         # Buttons
         # Launching buttons
@@ -96,7 +97,7 @@ class Othello:
                     pygame.quit()
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
-                    mouse_position = event.pos
+                    """mouse_position = event.pos
                     # Check If the click is inside the board
                     if self.reset_button.is_clicked(mouse_position):
                         self.reset_game(screen)
@@ -105,18 +106,27 @@ class Othello:
                         self.display_available_move(screen, self.current_player)
                         if not self.board.available_moves:
                             self.game_state = GAME_STATES["ENDING"]
-                            self.ending_othello(screen)
-                    """if self.current_player == 1 and not self.player_1["AI"]:
-                        mouse_position = event.pos
-                        # Check If the click is inside the board
-                        if self.is_valid_click(mouse_position):
-                            self.play_once(mouse_position, screen)  # Playing process
+                            self.ending_othello(screen)"""
+                    mouse_position = event.pos
+                    if self.reset_button.is_clicked(mouse_position):
+                        self.reset_game(screen)
+                    if self.board.is_clicked(mouse_position):  # Check If the click is inside the board
+                        if (self.current_player == 1 and not self.player_1["AI"]) or \
+                                (self.current_player == 2 and not self.player_2["AI"]):
+                            self.play_user(mouse_position, screen)  # Playing process
                             self.display_available_move(screen, self.current_player)
                             if not self.board.available_moves:
                                 self.game_state = GAME_STATES["ENDING"]
                                 self.ending_othello(screen)
-                    else:
-                        print("WAIT, NOW IT IS AI TURN")"""
+                            pygame.display.update()
+                        else:
+                            self.play_AI()
+                            self.update_color_board(screen)
+                            self.next_turn(screen)
+                            self.display_available_move(screen, self.current_player)
+                            if not self.board.available_moves:
+                                self.game_state = GAME_STATES["ENDING"]
+                                self.ending_othello(screen)
                 pygame.display.update()
 
     def reset_game(self, screen):
@@ -125,14 +135,7 @@ class Othello:
         self.launching_othello(screen)
 
     def ending_othello(self, screen):
-        p1_sum = 0
-        p2_sum = 0
-        for row in range(self.row_count):
-            for col in range(self.column_count):
-                if self.board.grid[row][col] == 1:
-                    p1_sum += 1
-                elif self.board.grid[row][col] == 2:
-                    p2_sum += 1
+        p1_sum, p2_sum = self.board.count_total_points()
         if p1_sum > p2_sum:
             self.game_state = GAME_STATES["P1WON"]
         elif p1_sum < p2_sum:
@@ -190,8 +193,8 @@ class Othello:
         for (row, col) in self.board.available_moves:
             pygame.draw.circle(screen, (200, 200, 200),
                                (
-                               self.board.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
-                               self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
+                                   self.board.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
+                                   self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
                                self.board.radius // 2)
 
     def reset_available_moves(self, screen):
@@ -214,7 +217,25 @@ class Othello:
                             self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
                            self.board.radius)
 
-    def play_once(self, mouse_position, screen):
+    def play_AI(self):
+        tab_points = []
+        for [x, y] in self.board.available_moves:
+            temp_board = Board(self.row_count, self.column_count, (89, 139, 44))
+            temp_board.grid = np.copy(self.board.grid)
+            temp_board.grid[x][y] = self.current_player
+            temp_board.update_grid(x, y, self.current_player)
+            if self.player_1["AI"]:
+                points = temp_board.count_p1_points()
+            else:
+                points = temp_board.count_p2_points()
+            tab_points.append(points)
+            print(f'En {[x,y]} il y a {points} points')
+        best_move = self.board.available_moves[np.argmax(tab_points)]
+        print(best_move)
+        self.board.grid[best_move[0]][best_move[1]] = self.current_player
+        self.board.update_grid(best_move[0], best_move[1], self.current_player)
+
+    def play_user(self, mouse_position, screen):
         column_click = (mouse_position[0] - self.board.left_board_side) / self.board.box_size / 1.03
         column_click = round_click_pos(column_click)
         row_click = (mouse_position[1] - self.board.top_board_side) / self.board.box_size / 1.03
@@ -223,13 +244,16 @@ class Othello:
             self.board.grid[row_click][column_click] = self.current_player
             if self.board.update_grid(row_click, column_click, self.current_player):
                 self.update_color_board(screen)
-                if self.current_player == 1:
-                    self.current_player = self.player_2["key"]
-                else:
-                    self.current_player = self.player_1["key"]
-                self.change_player_indicator(screen)
+                self.next_turn(screen)
             else:
                 self.board.grid[row_click][column_click] = 0
+
+    def next_turn(self, screen):
+        if self.current_player == 1:
+            self.current_player = self.player_2["key"]
+        else:
+            self.current_player = self.player_1["key"]
+        self.change_player_indicator(screen)
 
     def change_player_indicator(self, screen):
         if self.current_player == 1:
