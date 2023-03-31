@@ -43,7 +43,7 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.white_player = {"key": 1, "color": (255, 255, 255), "AI": False}
         self.black_player = {"key": 2, "color": (0, 0, 0), "AI": True}
         # Game state
-        self.current_player = self.white_player["key"]
+        self.current_player = self.white_player["key"]  # White player always starts
         self.game_state = GAME_STATES["LAUNCHING"]
         self.ai_start = False
 
@@ -71,14 +71,16 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.update_background(screen)
         self.launching_othello(screen)
 
-    def update_background(self, screen):  # This function updates game's background using the global state of the game
+    # This method updates game's background using the global state of the game
+    def update_background(self, screen: pygame.Surface):
         fond = pygame.image.load(f'assets/{self.game_state}_background.png')
         fond = fond.convert()
         screen.blit(fond, (0, 0))
         pygame.display.flip()
         pygame.display.update()
 
-    def launching_othello(self, screen):  # This function launches Othello and lets the user choose who starts
+    # This method launches Othello and lets the user choose who starts
+    def launching_othello(self, screen: pygame.Surface):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # Quit the game
@@ -97,7 +99,8 @@ class Othello:  # Class representing the functioning of the game of Othello
                     self.game_state = GAME_STATES["PLAYING"]
                     self.playing_othello(screen)  # Now start Othello
 
-    def playing_othello(self, screen):  # This function represents the main process of the Othello game
+    # This method represents the main process of the Othello game
+    def playing_othello(self, screen: pygame.Surface):
         self.init_game_background(screen)
         self.display_available_move(screen, self.black_player["key"])
 
@@ -117,8 +120,8 @@ class Othello:  # Class representing the functioning of the game of Othello
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
                     mouse_position = event.pos  # Click position
-                    if self.rules_button.is_clicked(mouse_position):  # If user decides to reset the game
-                        webbrowser.open(RULES_URL)
+                    if self.rules_button.is_clicked(mouse_position):  # If user decides to see the rules of the game
+                        webbrowser.open(RULES_URL)   # Let's open the official website of Othello's rules
                     if self.reset_button.is_clicked(mouse_position):  # If user decides to reset the game
                         self.reset_game(screen)
                     if self.board.is_clicked(mouse_position):  # Check If the click is inside the board
@@ -141,14 +144,16 @@ class Othello:  # Class representing the functioning of the game of Othello
                                 self.ending_othello(screen)
                 pygame.display.update()
 
-    def reset_game(self, screen):  # This function resets the game and brings back to the launching page
+    # This method resets the game and brings back to the launching page
+    def reset_game(self, screen: pygame.Surface):
         self.current_player = self.white_player["key"]  # White always starts
         self.game_state = GAME_STATES["LAUNCHING"]
         self.update_background(screen)
         self.board = Board(self.row_count, self.column_count, (89, 139, 44), SCREEN_SIZE)  # New board
         self.launching_othello(screen)
 
-    def ending_othello(self, screen):  # This function ends the game, calculates who won and brings to the ending page
+    # This method ends the game, calculates who won and brings to the ending page
+    def ending_othello(self, screen: pygame.Surface):
         white_player_score = self.board.count_points(self.white_player["key"])
         black_player_score = self.board.count_points(self.black_player["key"])
         if white_player_score > black_player_score:  # Calculate if white player won
@@ -170,7 +175,8 @@ class Othello:  # Class representing the functioning of the game of Othello
                     elif self.review_button.is_clicked(mouse_position):  # If review button is clicked, review the game
                         self.review_game(screen)
 
-    def review_game(self, screen):  # This function allows the user to review the previous game, and then to reset it
+    # This method allows the user to review the previous game, and then to reset it
+    def review_game(self, screen: pygame.Surface):
         winner = self.game_state
         self.game_state = GAME_STATES["REVIEW"]
         self.update_background(screen)
@@ -189,7 +195,8 @@ class Othello:  # Class representing the functioning of the game of Othello
                                self.board.radius * 2)
         pygame.display.update()
 
-    def display_available_move(self, screen, last_player_key):
+    # This method shows all the available moves of the board with little grey circles
+    def display_available_move(self, screen: pygame.Surface, last_player_key: int):
         # Generating other_coin_key
         if last_player_key == 1:
             next_player_key = 2
@@ -206,13 +213,15 @@ class Othello:  # Class representing the functioning of the game of Othello
         for (row, col) in self.board.available_moves:
             self.draw_circle(col, row, screen, (200, 200, 200), self.board.radius // 2)
 
-    def reset_available_moves(self, screen):
+    # This method deletes all the little circles of available moves that we created before
+    def reset_available_moves(self, screen: pygame.Surface):
         for row, col in self.board.available_moves:
             if self.board.grid[row][col] == 0:
                 self.draw_circle(col, row, screen, self.board.color, self.board.radius)
-        self.board.available_moves = []
+        self.board.available_moves = []    # Then, we delete all the current available moves
 
-    def update_board_display(self, screen):
+    # This method update the board while creating circle of the good color
+    def update_board_display(self, screen: pygame.Surface):
         for row in range(self.row_count):
             for col in range(self.column_count):
                 if self.board.grid[row][col] == 1:
@@ -220,7 +229,7 @@ class Othello:  # Class representing the functioning of the game of Othello
                 elif self.board.grid[row][col] == 2:
                     self.draw_circle(col, row, screen, self.black_player["color"], self.board.radius)
 
-    def draw_circle(self, col, row, screen, color, radius):
+    def draw_circle(self, col: int, row: int, screen: pygame.Surface, color: (int, int, int), radius: int):
         pygame.draw.circle(screen, color,
                            (self.board.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
                             self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
@@ -250,7 +259,7 @@ class Othello:  # Class representing the functioning of the game of Othello
             return True
         return False
 
-    def minimax(self, board, player, depth, maximizing_player, turned_coin):
+    def minimax(self, board: Board, player: int, depth: int, maximizing_player: int, turned_coin: int):
         if player == 1:
             other_player = self.black_player["key"]
         else:
@@ -285,7 +294,7 @@ class Othello:  # Class representing the functioning of the game of Othello
                 best_value = min(best_value, value)
         return best_value
 
-    def play_user(self, mouse_position, screen):
+    def play_user(self, mouse_position: (float, float), screen: pygame.Surface):
         column_click = (mouse_position[0] - self.board.left_board_side) / self.board.box_size / 1.03
         column_click = round_click_pos(column_click)
         row_click = (mouse_position[1] - self.board.top_board_side) / self.board.box_size / 1.03
@@ -297,14 +306,14 @@ class Othello:  # Class representing the functioning of the game of Othello
             return True
         return False
 
-    def next_turn(self, screen):
+    def next_turn(self, screen: pygame.Surface):
         if self.current_player == 1:
             self.current_player = self.black_player["key"]
         else:
             self.current_player = self.white_player["key"]
         self.change_player_indicator(screen)
 
-    def change_player_indicator(self, screen):
+    def change_player_indicator(self, screen: pygame.Surface):
         if self.current_player == 1:
             pygame.draw.circle(screen, self.white_player["color"],
                                (105,
@@ -316,7 +325,7 @@ class Othello:  # Class representing the functioning of the game of Othello
                                 150),
                                self.board.radius * 2)
 
-    def init_game_background(self, screen):
+    def init_game_background(self, screen: pygame.Surface):
         self.update_background(screen)
         self.display_user_color(screen)
         self.board.grid[3][3] = 1
@@ -331,7 +340,7 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.change_player_indicator(screen)
         pygame.display.update()
 
-    def display_user_color(self, screen):
+    def display_user_color(self, screen: pygame.Surface):
         if not self.white_player['AI']:
             pygame.draw.circle(screen, self.white_player["color"],
                                (105,
@@ -343,7 +352,7 @@ class Othello:  # Class representing the functioning of the game of Othello
                                 330),
                                self.board.radius * 2)
 
-    def draw_grid(self, screen):
+    def draw_grid(self, screen: pygame.Surface):
         for column in range(self.column_count):
             for row in range(self.row_count):
                 pygame.draw.rect(screen, self.board.color,
