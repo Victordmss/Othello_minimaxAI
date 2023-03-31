@@ -1,6 +1,11 @@
 import pygame
 from button import Button
 from board import Board
+import webbrowser
+
+RULES_URL = "https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english"
+
+SCREEN_SIZE = (1000, 600)
 
 GAME_STATES = {"LAUNCHING": 'launching',
                "PLAYING": 'playing',
@@ -48,18 +53,19 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.white_button = Button(714, 248, 357, 820)
         # Playing buttons
         self.reset_button = Button(13, 456, 518, 198)
+        self.rules_button = Button(790, 457, 516, 973)
         # Ending buttons
         self.review_button = Button(13, 528, 586, 198)
 
         # Creating board
         self.row_count = row_count
         self.column_count = column_count
-        self.board = Board(self.row_count, self.column_count, (89, 139, 44))
+        self.board = Board(self.row_count, self.column_count, (89, 139, 44), SCREEN_SIZE)
 
         # Initialisation of the game
         # Creation of the screen
         pygame.init()
-        screen = pygame.display.set_mode((1000, 600))
+        screen = pygame.display.set_mode(SCREEN_SIZE)
         pygame.display.set_caption('Abalone')
         # Launching of the game
         self.update_background(screen)
@@ -111,6 +117,8 @@ class Othello:  # Class representing the functioning of the game of Othello
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
                     mouse_position = event.pos  # Click position
+                    if self.rules_button.is_clicked(mouse_position):  # If user decides to reset the game
+                        webbrowser.open(RULES_URL)
                     if self.reset_button.is_clicked(mouse_position):  # If user decides to reset the game
                         self.reset_game(screen)
                     if self.board.is_clicked(mouse_position):  # Check If the click is inside the board
@@ -137,7 +145,7 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.current_player = self.white_player["key"]  # White always starts
         self.game_state = GAME_STATES["LAUNCHING"]
         self.update_background(screen)
-        self.board = Board(self.row_count, self.column_count, (89, 139, 44))  # New board
+        self.board = Board(self.row_count, self.column_count, (89, 139, 44), SCREEN_SIZE)  # New board
         self.launching_othello(screen)
 
     def ending_othello(self, screen):  # This function ends the game, calculates who won and brings to the ending page
@@ -226,7 +234,7 @@ class Othello:  # Class representing the functioning of the game of Othello
         best_move = [-1, -1]
         max_point = float('-inf')
         for move in self.board.available_moves:
-            temp_board = self.board.copy_board()
+            temp_board = self.board.copy_board(SCREEN_SIZE)
             print(move)
             temp_board.grid[move[0]][move[1]] = self.current_player
             turned_coin = temp_board.update_grid(move[0], move[1], self.current_player)
