@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="Cleaning code and add comments">
+    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="-&gt; Updating interface (adding new features)&#10;-&gt; Bugs fix about minimax algorithm process&#10;-&gt; Implementation of the possibility to change the AI level">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/playing_background.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/playing_background.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/review_background.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/review_background.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/othello.py" beforeDir="false" afterPath="$PROJECT_DIR$/othello.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -154,6 +151,8 @@
       <workItem from="1680447257451" duration="287000" />
       <workItem from="1680447557765" duration="11000" />
       <workItem from="1680519550500" duration="5434000" />
+      <workItem from="1680528583508" duration="1110000" />
+      <workItem from="1680530376025" duration="163000" />
     </task>
     <task id="LOCAL-00001" summary="new launching_background.png with the possibily to choose directly who's starting (AI or user)">
       <created>1678490493955</created>
@@ -225,7 +224,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680262368412</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="-&gt; Updating interface (adding new features)&#10;-&gt; Bugs fix about minimax algorithm process&#10;-&gt; Implementation of the possibility to change the AI level">
+      <created>1680528753232</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1680528753232</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,10 +245,11 @@
     <MESSAGE value="Creation of a first ai that just choose the best move to do in order to maximize the number of points at the end of the turn" />
     <MESSAGE value="Creation of a minimax algorithm for AI process &#10;Code improvements and changes" />
     <MESSAGE value="Cleaning code and add comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaning code and add comments" />
+    <MESSAGE value="-&gt; Updating interface (adding new features)&#10;-&gt; Bugs fix about minimax algorithm process&#10;-&gt; Implementation of the possibility to change the AI level" />
+    <option name="LAST_COMMIT_MESSAGE" value="-&gt; Updating interface (adding new features)&#10;-&gt; Bugs fix about minimax algorithm process&#10;-&gt; Implementation of the possibility to change the AI level" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1680524808519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1680530527630" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/othello$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1677503180560" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pythonTEST" />
   </component>
 </project>

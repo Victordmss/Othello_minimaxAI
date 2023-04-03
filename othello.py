@@ -205,7 +205,7 @@ class Othello:  # Class representing the functioning of the game of Othello
 
     def show_score(self, screen):
         pygame.draw.rect(screen, (198, 184, 168), (48, 285, 50, 50))
-        pygame.draw.rect(screen, (198, 184, 168), (130, 285, 50, 50))
+        pygame.draw.rect(screen, (198, 184, 168), (125, 285, 50, 50))
         font = pygame.font.Font(pygame.font.get_default_font(), 40)
         white_score = font.render(
             str(self.board.count_points(self.players["white_player"]["key"])),
@@ -218,7 +218,7 @@ class Othello:  # Class representing the functioning of the game of Othello
             (0, 0, 0)
         )
         screen.blit(white_score, (50, 285))
-        screen.blit(black_score, (130, 285))
+        screen.blit(black_score, (125, 285))
 
     # This method allows the user to review the previous game, and then to reset it
     def review_game(self, screen: pygame.Surface):
