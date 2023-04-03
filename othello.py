@@ -36,26 +36,45 @@ def round_click_pos(x):  # This function convert a float into an integer by trun
     return x
 
 
+# This method is a heuristic evaluation method that allow us to put a score for a specific grid
+def evaluate_board(board, player, turned_coin):
+    total = 0
+    for row in range(board.row_count):
+        for col in range(board.column_count):
+            if board.grid[row][col] == player:
+                total += board.grid[row][col] * board.square_weight[row][col]
+    return total + 2 * turned_coin
+
+
 class Othello:  # Class representing the functioning of the game of Othello
     def __init__(self, row_count, column_count):
         # Game parameters
         # Players
-        self.white_player = {"key": 1, "color": (255, 255, 255), "AI": False}
-        self.black_player = {"key": 2, "color": (0, 0, 0), "AI": True}
+        self.players = {
+            "white_player" : {"key": 1, "color": (255, 255, 255), "AI": False},
+            "black_player" : {"key": 2, "color": (0, 0, 0), "AI": True},
+        }
         # Game state
-        self.current_player = self.white_player["key"]  # White player always starts
+        self.current_player = self.players["white_player"]["key"]  # White player always starts
         self.game_state = GAME_STATES["LAUNCHING"]
         self.ai_start = False
+        self.difficulty = 1   # Default difficulty is easy (1 = easy, 2 = medium, 3 = hard)
 
         # Buttons
-        # Launching buttons
-        self.black_button = Button(184, 245, 352, 286)
-        self.white_button = Button(714, 248, 357, 820)
-        # Playing buttons
-        self.reset_button = Button(13, 456, 518, 198)
-        self.rules_button = Button(790, 457, 516, 973)
-        # Ending buttons
-        self.review_button = Button(13, 528, 586, 198)
+        self.buttons = {
+            # Launching buttons
+            "black_button" : Button(184, 245, 352, 286),
+            "white_button" : Button(714, 248, 357, 820),
+            # Playing buttons
+            "reset_button" : Button(14, 456, 518, 196),
+            "rules_button" : Button(790, 457, 516, 973),
+            # Ending buttons
+            "review_button" : Button(14, 528, 586, 196),
+            # Difficulty button
+            "easy_diff_button" : Button(14, 387, 445, 69),
+            "medium_diff_button" : Button(77, 387, 445, 133),
+            "hard_diff_button" : Button(140, 387, 445, 196),
+        }
 
         # Creating board
         self.row_count = row_count
@@ -88,24 +107,24 @@ class Othello:  # Class representing the functioning of the game of Othello
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to start the game and choose his color
                     mouse_position = event.pos
-                    if self.black_button.is_clicked(mouse_position):  # User chooses black, so AI is white and starts
-                        self.white_player['AI'] = True
+                    if self.buttons["black_button"].is_clicked(mouse_position):  # User chooses black, AI starts
+                        self.players["white_player"]["AI"] = True
                         self.ai_start = True
-                        self.black_player['AI'] = False
-                    if self.white_button.is_clicked(mouse_position):  # User chooses white, so he starts
-                        self.white_player['AI'] = False
+                        self.players["black_player"]["AI"] = False
+                    if self.buttons["white_button"].is_clicked(mouse_position):  # User chooses white, he starts
+                        self.players["white_player"]["AI"] = False
                         self.ai_start = False
-                        self.black_player['AI'] = True
+                        self.players["black_player"]["AI"] = True
                     self.game_state = GAME_STATES["PLAYING"]
                     self.playing_othello(screen)  # Now start Othello
 
     # This method represents the main process of the Othello game
     def playing_othello(self, screen: pygame.Surface):
         self.init_game_background(screen)
-        self.display_available_move(screen, self.black_player["key"])
+        self.display_available_move(screen, self.players["black_player"]["key"])
 
         if self.ai_start:  # In case the user has chosen black, let's play with AI first
-            self.board.is_there_valid_move(self.white_player["key"], self.black_player["key"])
+            self.board.is_there_valid_move(self.players["white_player"]["key"], self.players["black_player"]["key"])
             self.play_AI()
             self.update_board_display(screen)
             self.display_available_move(screen, self.current_player)
@@ -120,14 +139,22 @@ class Othello:  # Class representing the functioning of the game of Othello
                     exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:  # Click are used to play and place your coin
                     mouse_position = event.pos  # Click position
-                    if self.rules_button.is_clicked(mouse_position):  # If user decides to see the rules of the game
-                        webbrowser.open(RULES_URL)   # Let's open the official website of Othello's rules
-                    if self.reset_button.is_clicked(mouse_position):  # If user decides to reset the game
+                    print(mouse_position)
+                    if self.buttons["rules_button"].is_clicked(mouse_position):  # Let's show the rules of the game
+                        webbrowser.open(RULES_URL)  # Let's open the official website of Othello's rules
+                    elif self.buttons["reset_button"].is_clicked(mouse_position):  # If user decides to reset the game
                         self.reset_game(screen)
-                    if self.board.is_clicked(mouse_position):  # Check If the click is inside the board
+                    elif self.buttons["easy_diff_button"].is_clicked(mouse_position):  # Difficulty changes to easy
+                        self.difficulty = 1
+                    elif self.buttons["medium_diff_button"].is_clicked(mouse_position):  # Difficulty changes to medium
+                        self.difficulty = 2
+                    elif self.buttons["hard_diff_button"].is_clicked(mouse_position):  # Difficulty changes to hard
+                        self.difficulty = 3
+                    elif self.board.is_clicked(mouse_position):  # Check If the click is inside the board
                         if self.play_user(mouse_position, screen):  # Play if the move is allowed
                             self.display_available_move(screen, self.current_player)
                             self.next_turn(screen)
+                            self.show_score(screen)
                             if not self.board.available_moves:  # If there are no available move anymore, game ends
                                 self.game_state = GAME_STATES["ENDING"]
                                 self.ending_othello(screen)
@@ -137,8 +164,9 @@ class Othello:  # Class representing the functioning of the game of Othello
                                 self.display_available_move(screen, self.current_player)
                                 self.update_board_display(screen)
                                 self.next_turn(screen)
+                                self.show_score(screen)
                             else:
-                                print("BUG SYSTEME")
+                                print("BUG SYSTEM")
                             if not self.board.available_moves:  # If there are no available move anymore, game ends
                                 self.game_state = GAME_STATES["ENDING"]
                                 self.ending_othello(screen)
@@ -146,7 +174,7 @@ class Othello:  # Class representing the functioning of the game of Othello
 
     # This method resets the game and brings back to the launching page
     def reset_game(self, screen: pygame.Surface):
-        self.current_player = self.white_player["key"]  # White always starts
+        self.current_player = self.players["white_player"]["key"]  # White always starts
         self.game_state = GAME_STATES["LAUNCHING"]
         self.update_background(screen)
         self.board = Board(self.row_count, self.column_count, (89, 139, 44), SCREEN_SIZE)  # New board
@@ -154,8 +182,8 @@ class Othello:  # Class representing the functioning of the game of Othello
 
     # This method ends the game, calculates who won and brings to the ending page
     def ending_othello(self, screen: pygame.Surface):
-        white_player_score = self.board.count_points(self.white_player["key"])
-        black_player_score = self.board.count_points(self.black_player["key"])
+        white_player_score = self.board.count_points(self.players["white_player"]["key"])
+        black_player_score = self.board.count_points(self.players["black_player"]["key"])
         if white_player_score > black_player_score:  # Calculate if white player won
             self.game_state = GAME_STATES["P1WON"]
         elif white_player_score < black_player_score:  # Calculate if black player won
@@ -175,6 +203,23 @@ class Othello:  # Class representing the functioning of the game of Othello
                     elif self.review_button.is_clicked(mouse_position):  # If review button is clicked, review the game
                         self.review_game(screen)
 
+    def show_score(self, screen):
+        pygame.draw.rect(screen, (198, 184, 168), (48, 285, 50, 50))
+        pygame.draw.rect(screen, (198, 184, 168), (130, 285, 50, 50))
+        font = pygame.font.Font(pygame.font.get_default_font(), 40)
+        white_score = font.render(
+            str(self.board.count_points(self.players["white_player"]["key"])),
+            True,
+            (255, 255, 255)
+        )
+        black_score = font.render(
+            str(self.board.count_points(self.players["black_player"]["key"])),
+            True,
+            (0, 0, 0)
+        )
+        screen.blit(white_score, (50, 285))
+        screen.blit(black_score, (130, 285))
+
     # This method allows the user to review the previous game, and then to reset it
     def review_game(self, screen: pygame.Surface):
         winner = self.game_state
@@ -184,12 +229,12 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.draw_grid(screen)
         self.update_board_display(screen)
         if winner == 'p1won':  # Show who won
-            pygame.draw.circle(screen, self.white_player["color"],
+            pygame.draw.circle(screen, self.players["white_player"]["color"],
                                (105,
                                 150),
                                self.board.radius * 2)
         elif 'p2won':  # Show who won
-            pygame.draw.circle(screen, self.black_player["color"],
+            pygame.draw.circle(screen, self.players["black_player"]["color"],
                                (105,
                                 150),
                                self.board.radius * 2)
@@ -218,140 +263,148 @@ class Othello:  # Class representing the functioning of the game of Othello
         for row, col in self.board.available_moves:
             if self.board.grid[row][col] == 0:
                 self.draw_circle(col, row, screen, self.board.color, self.board.radius)
-        self.board.available_moves = []    # Then, we delete all the current available moves
+        self.board.available_moves = []  # Then, we delete all the current available moves
 
     # This method update the board while creating circle of the good color
     def update_board_display(self, screen: pygame.Surface):
         for row in range(self.row_count):
             for col in range(self.column_count):
-                if self.board.grid[row][col] == 1:
-                    self.draw_circle(col, row, screen, self.white_player["color"], self.board.radius)
-                elif self.board.grid[row][col] == 2:
-                    self.draw_circle(col, row, screen, self.black_player["color"], self.board.radius)
+                if self.board.grid[row][col] == self.players["white_player"]["key"]:
+                    self.draw_circle(col, row, screen, self.players["white_player"]["color"], self.board.radius)
+                elif self.board.grid[row][col] == self.players["black_player"]["key"]:
+                    self.draw_circle(col, row, screen, self.players["black_player"]["color"], self.board.radius)
 
+    # This method is a shortcut to draw a circle at a specific (row, column) quickly
     def draw_circle(self, col: int, row: int, screen: pygame.Surface, color: (int, int, int), radius: int):
         pygame.draw.circle(screen, color,
                            (self.board.left_board_side + col * self.board.box_size * 1.03 + self.board.box_size // 2,
                             self.board.top_board_side + self.board.box_size * row * 1.03 + self.board.box_size // 2),
                            radius)
 
+    # This method is the main AI turn process. We manage the selection of the move and the modification of the board
     def play_AI(self):
-        if self.current_player == 1:
-            other_player = self.black_player["key"]
+        if self.current_player == self.players["white_player"]["key"]:
+            other_player = self.players["black_player"]["key"]
         else:
-            other_player = self.white_player["key"]
-        best_move = [-1, -1]
-        max_point = float('-inf')
+            other_player = self.players["white_player"]["key"]
+        best_move = [-1, -1]  # Default best move, allow us to know if the minimax algorithm doesn't work
+        max_point = float('-inf')  # Represent the points of the best found move
         for move in self.board.available_moves:
-            temp_board = self.board.copy_board(SCREEN_SIZE)
-            print(move)
-            temp_board.grid[move[0]][move[1]] = self.current_player
-            turned_coin = temp_board.update_grid(move[0], move[1], self.current_player)
-            temp_board.is_there_valid_move(other_player, self.current_player)
-            move_points = self.minimax(temp_board, other_player, 0, False, turned_coin)
+            temp_board = self.board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate moves
+            temp_board.grid[move[0]][move[1]] = self.current_player  # Simulation of one of the available move
+            flipped_coin = temp_board.update_grid(move[0], move[1], self.current_player)  # How many coin did it flipped
+            temp_board.is_there_valid_move(other_player, self.current_player)  # Updating of the new available moves
+            move_points = self.minimax(temp_board, other_player, False, flipped_coin, depth=self.difficulty)
             if move_points > max_point:
-                max_point = move_points
+                max_point = move_points  # Then this move is currently the best that we found, we save it
                 best_move = move
-        if best_move != [-1, -1]:
-            print("move chosed : ", best_move, max_point)
-            self.board.grid[best_move[0]][best_move[1]] = self.current_player
-            self.board.update_grid(best_move[0], best_move[1], self.current_player)
+        if best_move != [-1, -1]:  # If we have found a move
+            self.board.grid[best_move[0]][best_move[1]] = self.current_player  # Modification of the board
+            self.board.update_grid(best_move[0], best_move[1], self.current_player)  # Updating of the board
             return True
-        return False
+        return False  # Not any move has been found
 
-    def minimax(self, board: Board, player: int, depth: int, maximizing_player: int, turned_coin: int):
-        if player == 1:
-            other_player = self.black_player["key"]
+    # Implementation of the minimax algorithm for Othello game
+    def minimax(self, board: Board, player: int, maximizing_player: int, turned_coin: int, depth: int):
+        if player == self.players["white_player"]["key"]:
+            other_player = self.players["black_player"]["key"]
         else:
-            other_player = self.white_player["key"]
+            other_player = self.players["white_player"]["key"]
 
-        if depth == 0 or board.available_moves == []:
-            total = 0
-            for row in range(board.row_count):
-                for col in range(board.column_count):
-                    if board.grid[row][col] == player:
-                        total += board.grid[row][col] * board.square_weight[row][col]
-            return total + 2 * turned_coin
+        if depth == 0 or board.available_moves == []:  # If we have a leaf node
+            total = evaluate_board(board, player, turned_coin)  # We evaluate the board
+            return total
 
-        if maximizing_player:
-            best_value = float('-inf')
+        if maximizing_player:  # If we are with the maximizing player
+            best_value = float('-inf')  # We want to find the best board evaluation
             for move in board.available_moves:
-                temp_board = board.copy_board()
-                temp_board.grid[move[0]][move[1]] = player
-                turned_coin = temp_board.update_grid(move[0], move[1], player)
-                temp_board.is_there_valid_move(other_player, player)
-                value = self.minimax(temp_board, other_player, depth - 1, False, turned_coin)
-                best_value = max(best_value, value)
-        else:
-            best_value = float('inf')
+                temp_board = board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate moves
+                temp_board.grid[move[0]][move[1]] = player  # Simulation of one of the available move
+                turned_coin = temp_board.update_grid(move[0], move[1], player)  # How many coin did it flipped
+                temp_board.is_there_valid_move(other_player, player)  # Updating of the new available moves
+                value = self.minimax(temp_board, other_player, False, turned_coin, depth - 1)  # Minimax process
+                best_value = max(best_value, value)  # Value of this node is the best value that we found
+        else:  # If we are with the minimizing player
+            best_value = float('+inf')  # We want to find the worth board evaluation
             for move in board.available_moves:
-                temp_board = board.copy_board()
-                temp_board.grid[move[0]][move[1]] = player
-                turned_coin = temp_board.update_grid(move[0], move[1], player)
-                temp_board.is_there_valid_move(other_player, player)
-                value = self.minimax(temp_board, other_player, depth - 1, True, turned_coin)
-                print(value)
-                best_value = min(best_value, value)
-        return best_value
+                temp_board = board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate moves
+                temp_board.grid[move[0]][move[1]] = player  # Simulation of one of the available move
+                turned_coin = temp_board.update_grid(move[0], move[1], player)  # How many coin did it flipped
+                temp_board.is_there_valid_move(other_player, player)  # Updating of the new available moves
+                value = self.minimax(temp_board, other_player, True, turned_coin,  depth - 1)  # Minimax process
+                best_value = min(best_value, value)  # Value of this node is the worth value that we found
+        return best_value  # We return the value for each possible move of the grid
 
+    # This method is the main user turn process. We manage a verification process and the modification of the board
     def play_user(self, mouse_position: (float, float), screen: pygame.Surface):
+        column_click, row_click = self.convert_click_to_position(mouse_position)  # We convert the click in a position
+        if (row_click, column_click) in self.board.available_moves:  # If the move is available
+            self.board.grid[row_click][column_click] = self.current_player
+            self.board.update_grid(row_click, column_click, self.current_player)
+            self.update_board_display(screen)
+            return True  # Move done with success
+        return False  # Move invalid
+
+    # This method convert a click in a tuple integer that represent the position of the click in the grid
+    def convert_click_to_position(self, mouse_position: (float, float)):
         column_click = (mouse_position[0] - self.board.left_board_side) / self.board.box_size / 1.03
         column_click = round_click_pos(column_click)
         row_click = (mouse_position[1] - self.board.top_board_side) / self.board.box_size / 1.03
         row_click = round_click_pos(row_click)
-        if (row_click, column_click) in self.board.available_moves:
-            self.board.grid[row_click][column_click] = self.current_player
-            self.board.update_grid(row_click, column_click, self.current_player)
-            self.update_board_display(screen)
-            return True
-        return False
+        return column_click, row_click
 
+    # This method manage the end of a turn and switch the current player
     def next_turn(self, screen: pygame.Surface):
-        if self.current_player == 1:
-            self.current_player = self.black_player["key"]
+        if self.current_player == self.players["white_player"]["key"]:
+            self.current_player = self.players["black_player"]["key"]
         else:
-            self.current_player = self.white_player["key"]
-        self.change_player_indicator(screen)
+            self.current_player = self.players["white_player"]["key"]
+        self.change_player_indicator(screen)  # We change the player indicator that it displays on the screen
 
+    # This method changes the player indicator circle that it display on the top right of the screen
     def change_player_indicator(self, screen: pygame.Surface):
-        if self.current_player == 1:
-            pygame.draw.circle(screen, self.white_player["color"],
+        if self.current_player == self.players["white_player"]["key"]:  # If the current player is the white player
+            pygame.draw.circle(screen, self.players["white_player"]["color"],
                                (105,
-                                150),
-                               self.board.radius * 2)
-        else:
-            pygame.draw.circle(screen, self.black_player["color"],
+                                117),
+                               self.board.radius * 1.25)
+        else:  # If the current player is the black player
+            pygame.draw.circle(screen, self.players["black_player"]["color"],
                                (105,
-                                150),
-                               self.board.radius * 2)
+                                117),
+                               self.board.radius * 1.25)
 
+    # This method is called at the beginning of the playing part of the game in order to create the displayed board
     def init_game_background(self, screen: pygame.Surface):
-        self.update_background(screen)
-        self.display_user_color(screen)
-        self.board.grid[3][3] = 1
-        self.board.grid[4][4] = 1
-        self.board.grid[4][3] = 2
-        self.board.grid[3][4] = 2
-        self.draw_grid(screen)
-        self.draw_circle(3, 3, screen, self.white_player["color"], self.board.radius)
-        self.draw_circle(4, 4, screen, self.white_player["color"], self.board.radius)
-        self.draw_circle(4, 3, screen, self.black_player["color"], self.board.radius)
-        self.draw_circle(3, 4, screen, self.black_player["color"], self.board.radius)
-        self.change_player_indicator(screen)
+        self.update_background(screen)  # Updating the background
+        self.display_user_color(screen)  # Show the user main color to remind it to him
+        self.board.grid[3][3] = self.players["white_player"]["key"]  # Place the starting pieces
+        self.board.grid[4][4] = self.players["white_player"]["key"]  # Place the starting pieces
+        self.board.grid[4][3] = self.players["black_player"]["key"]  # Place the starting pieces
+        self.board.grid[3][4] = self.players["black_player"]["key"]  # Place the starting pieces
+        self.draw_grid(screen)  # Draw the grid on the screen
+        # This section has the same goal as self.update_board_display. However, we don't have to analyse all the grid
+        self.draw_circle(3, 3, screen, self.players["white_player"]["color"], self.board.radius)
+        self.draw_circle(4, 4, screen, self.players["white_player"]["color"], self.board.radius)
+        self.draw_circle(4, 3, screen, self.players["black_player"]["color"], self.board.radius)
+        self.draw_circle(3, 4, screen, self.players["black_player"]["color"], self.board.radius)
+        self.change_player_indicator(screen)  # Let's build the player display indicator
         pygame.display.update()
 
+    # This method displays the user color on the right part of the board in order to remind it to him during the game
     def display_user_color(self, screen: pygame.Surface):
-        if not self.white_player['AI']:
-            pygame.draw.circle(screen, self.white_player["color"],
+        if not self.players["white_player"]['AI']:  # If the player is the white player
+            pygame.draw.circle(screen, self.players["white_player"]["color"],
                                (105,
-                                330),
-                               self.board.radius * 2)
-        else:
-            pygame.draw.circle(screen, self.black_player["color"],
+                                210),
+                               self.board.radius * 1.25)
+        else:  # If the player is the black player
+            pygame.draw.circle(screen, self.players["black_player"]["color"],
                                (105,
-                                330),
-                               self.board.radius * 2)
+                                210),
+                               self.board.radius * 1.25)
 
+    # This method draws the green grid on the board with a sequence of green rectangle
     def draw_grid(self, screen: pygame.Surface):
         for column in range(self.column_count):
             for row in range(self.row_count):
