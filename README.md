@@ -11,7 +11,7 @@ The user can choose his colour for the whole game. The white color always starts
 
 ### Playing
 
-![image](https://user-images.githubusercontent.com/86049841/229532918-0e424e24-9e3c-4bfc-a97b-b85fcaa0d98c.png)
+![image](https://user-images.githubusercontent.com/86049841/229534942-a949f660-8531-4456-a459-d6502d44e98b.png)
 
 The user can see all his available moves with the small grey circles. He just have to click on a valid position on the board to make a move. After that, the AI will play with a little delay and it will be his turn again.
 
