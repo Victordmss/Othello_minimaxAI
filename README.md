@@ -13,9 +13,9 @@ The user can choose his colour for the whole game. The black color always starts
 
 ![image](https://user-images.githubusercontent.com/86049841/229534942-a949f660-8531-4456-a459-d6502d44e98b.png)
 
-The user can see all his available moves with the small grey circles. He just have to click on a valid position on the board to make a move. After that, the AI will play with a little delay and it will be his turn again.
+The user can see all his available moves with the small grey circles. He just has to click on a valid position on the board to make a move. After that, the AI will play with a little delay and it will be his turn again.
 
-On the left part of the screen, there are some informations like the color of the user, the score or the possibility to change the difficulty and reset the game.
+On the left part of the screen, there is some information like the color of the user, the score or the possibility to change the difficulty and reset the game.
 
 ### Ending
 
