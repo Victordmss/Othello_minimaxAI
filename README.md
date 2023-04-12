@@ -7,7 +7,7 @@ Development of the well known othello/reversi game on python with implementation
 
 ![](./assets/launching_background.png)
 
-The user can choose his colour for the whole game. The white color always starts. The other colour will be played by an implemented AI (easy level by default).
+The user can choose his colour for the whole game. The black color always starts. The other colour will be played by an implemented AI (easy level by default).
 
 ### Playing
 
