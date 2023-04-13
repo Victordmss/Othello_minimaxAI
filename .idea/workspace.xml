@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="-&gt; Cleaning code and methods&#10;-&gt; Fixing a bug about the use of the reset button">
+    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="-&gt; Fixing black starting&#10;-&gt; Fixing review screen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/othello.py" beforeDir="false" afterPath="$PROJECT_DIR$/othello.py" afterDir="false" />
     </list>
@@ -158,7 +158,9 @@
       <workItem from="1680533390850" duration="37000" />
       <workItem from="1680690429938" duration="1936000" />
       <workItem from="1681043775622" duration="18000" />
-      <workItem from="1681313740631" duration="1539000" />
+      <workItem from="1681313740631" duration="1698000" />
+      <workItem from="1681382056367" duration="357000" />
+      <workItem from="1681409709374" duration="67000" />
     </task>
     <task id="LOCAL-00001" summary="new launching_background.png with the possibily to choose directly who's starting (AI or user)">
       <created>1678490493955</created>
@@ -251,7 +253,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680691772140</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="-&gt; Fixing black starting&#10;-&gt; Fixing review screen">
+      <created>1681315439183</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1681315439183</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,10 +276,11 @@
     <MESSAGE value="Cleaning code and add comments" />
     <MESSAGE value="-&gt; Updating interface (adding new features)&#10;-&gt; Bugs fix about minimax algorithm process&#10;-&gt; Implementation of the possibility to change the AI level" />
     <MESSAGE value="-&gt; Cleaning code and methods&#10;-&gt; Fixing a bug about the use of the reset button" />
-    <option name="LAST_COMMIT_MESSAGE" value="-&gt; Cleaning code and methods&#10;-&gt; Fixing a bug about the use of the reset button" />
+    <MESSAGE value="-&gt; Fixing black starting&#10;-&gt; Fixing review screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="-&gt; Fixing black starting&#10;-&gt; Fixing review screen" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1681315121807" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1681315339430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/othello$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1677503180560" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pythonTEST" />
   </component>
 </project>

@@ -429,4 +429,4 @@ class Othello:  # Class representing the functioning of the game of Othello
             for col in range(board.column_count):
                 if board.grid[row][col] == player:
                     total += board.grid[row][col] * board.square_weight[row][col]
-        return total + 2 * turned_coin
+        return total + 1.5 * turned_coin
