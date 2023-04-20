@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="-&gt; Fixing black starting&#10;-&gt; Fixing review screen">
+    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="Improving the heuristic method of evaluation of the grid">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/othello.py" beforeDir="false" afterPath="$PROJECT_DIR$/othello.py" afterDir="false" />
     </list>
@@ -160,7 +160,9 @@
       <workItem from="1681043775622" duration="18000" />
       <workItem from="1681313740631" duration="1698000" />
       <workItem from="1681382056367" duration="357000" />
-      <workItem from="1681409709374" duration="67000" />
+      <workItem from="1681409709374" duration="357000" />
+      <workItem from="1681651777085" duration="10000" />
+      <workItem from="1681990581696" duration="1420000" />
     </task>
     <task id="LOCAL-00001" summary="new launching_background.png with the possibily to choose directly who's starting (AI or user)">
       <created>1678490493955</created>
@@ -260,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681315439183</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Improving the heuristic method of evaluation of the grid">
+      <created>1681409801098</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1681409801098</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,10 +286,11 @@
     <MESSAGE value="-&gt; Updating interface (adding new features)&#10;-&gt; Bugs fix about minimax algorithm process&#10;-&gt; Implementation of the possibility to change the AI level" />
     <MESSAGE value="-&gt; Cleaning code and methods&#10;-&gt; Fixing a bug about the use of the reset button" />
     <MESSAGE value="-&gt; Fixing black starting&#10;-&gt; Fixing review screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="-&gt; Fixing black starting&#10;-&gt; Fixing review screen" />
+    <MESSAGE value="Improving the heuristic method of evaluation of the grid" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improving the heuristic method of evaluation of the grid" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1681315339430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1681991271835" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/othello$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1677503180560" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pythonTEST" />
   </component>
 </project>

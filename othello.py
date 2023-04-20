@@ -194,35 +194,34 @@ class Othello:  # Class representing the functioning of the game of Othello
 
     # Implementation of the minimax algorithm for Othello game
     def minimax(self, board: Board, player: int, maximizing_player: int, turned_coin: int, depth: int):
-        if player == self.players["white_player"]["key"]:
+        if player == self.players["white_player"]["key"]:  # Define the opponent key
             other_player = self.players["black_player"]["key"]
         else:
             other_player = self.players["white_player"]["key"]
 
-        if depth == 0 or board.available_moves == []:  # If we have a leaf node
-            total = self.evaluate_board(board, player, turned_coin)  # We evaluate the board
-            return total
+        if depth == 0 or board.available_moves == []:  # If we have a leaf node or the maximum depth is reached
+            total = self.evaluate_board(board, player, turned_coin)  # We evaluate the board with the heuristic method
+            return total  # We return the heuristic evaluation of the board
 
         if maximizing_player:  # If we are with the maximizing player
-            best_value = float('-inf')  # We want to find the best board evaluation
-            for move in board.available_moves:
-                temp_board = board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate moves
-                temp_board.grid[move[0]][move[1]] = player  # Simulation of one of the available move
+            best_value = float('-inf')  # We want to find the best node in the possible moves of this board
+            for move in board.available_moves:  # We process all the possible moves
+                temp_board = board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate the move
+                temp_board.grid[move[0]][move[1]] = player  # Simulation of the move
                 turned_coin = temp_board.update_grid(move[0], move[1], player)  # How many coin did it flipped
-                temp_board.is_there_valid_move(other_player, player)  # Updating of the new available moves
+                temp_board.is_there_valid_move(other_player, player)  # Update of the new available moves
                 value = self.minimax(temp_board, other_player, False, turned_coin, depth - 1)  # Minimax process
-                best_value = max(best_value, value)  # Value of this node is the best value that we found
+                best_value = max(best_value, value)  # Is the value of this node the best value that we found
         else:  # If we are with the minimizing player
-            best_value = float('+inf')  # We want to find the worth board evaluation
-            for move in board.available_moves:
-                temp_board = board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate moves
-                temp_board.grid[move[0]][move[1]] = player  # Simulation of one of the available move
+            best_value = float('+inf')  # We want to find the worth node in the possible moves of this board
+            for move in board.available_moves:  # We process all the possible moves
+                temp_board = board.copy_board(SCREEN_SIZE)  # We copy the board because we want to simulate the move
+                temp_board.grid[move[0]][move[1]] = player  # Simulation of the move
                 turned_coin = temp_board.update_grid(move[0], move[1], player)  # How many coin did it flipped
-                temp_board.is_there_valid_move(other_player, player)  # Updating of the new available moves
+                temp_board.is_there_valid_move(other_player, player)  # Update the new available moves
                 value = self.minimax(temp_board, other_player, True, turned_coin, depth - 1)  # Minimax process
-                best_value = min(best_value, value)  # Value of this node is the worth value that we found
-        return best_value  # We return the value for each possible move of the grid
-
+                best_value = min(best_value, value)  # Is the value of this node the worth value that we found
+        return best_value  # We return the best/worth (maximizing/minimazing player) node for this move
 
     # ------------------------------------------------------------------------------------------------------------------
     # Control and interruption methods
