@@ -78,12 +78,15 @@ class Othello:  # Class representing the functioning of the game of Othello
                         self.players["white_player"]["AI"] = True
                         self.ai_start = False
                         self.players["black_player"]["AI"] = False
+                        self.game_state = GAME_STATES["PLAYING"]
+                        self.playing_othello(screen)  # Now start Othello
                     if self.buttons["white_button"].is_clicked(mouse_position):  # User chooses white, AI starts
                         self.players["white_player"]["AI"] = False
                         self.ai_start = True
                         self.players["black_player"]["AI"] = True
-                    self.game_state = GAME_STATES["PLAYING"]
-                    self.playing_othello(screen)  # Now start Othello
+                        self.game_state = GAME_STATES["PLAYING"]
+                        self.playing_othello(screen)  # Now start Othello
+
 
     # This method represents the main process of the Othello game
     def playing_othello(self, screen: pygame.Surface):
