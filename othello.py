@@ -11,8 +11,8 @@ SCREEN_SIZE = (1000, 600)
 GAME_STATES = {"LAUNCHING": 'launching',
                "PLAYING": 'playing',
                "ENDING": 'ending',
-               "P1WON": "p1won",
-               "P2WON": "p2won",
+               "PWHITEWON": "pwhitewon",
+               "PBLACKWON": "pblackwon",
                "DRAW": "draw",
                "REVIEW": "review", }
 
@@ -141,9 +141,9 @@ class Othello:  # Class representing the functioning of the game of Othello
         white_player_score = self.board.count_points(self.players["white_player"]["key"])
         black_player_score = self.board.count_points(self.players["black_player"]["key"])
         if white_player_score > black_player_score:  # Calculate if white player won
-            self.game_state = GAME_STATES["P1WON"]
+            self.game_state = GAME_STATES["PWHITEWON"]
         elif white_player_score < black_player_score:  # Calculate if black player won
-            self.game_state = GAME_STATES["P2WON"]
+            self.game_state = GAME_STATES["PBLACKWON"]
         else:  # Calculate if nobody won because of a draw
             self.game_state = GAME_STATES["DRAW"]
         self.update_background(screen)  # Updating to the good ending page depending on the result of the game
@@ -252,12 +252,12 @@ class Othello:  # Class representing the functioning of the game of Othello
         self.draw_grid(screen)
         self.update_board_display(screen)
         self.show_score(screen)
-        if winner == 'p1won':  # Show who won
+        if winner == 'pwhitewon':  # Show who won
             pygame.draw.circle(screen, self.players["white_player"]["color"],
                                (105,
                                 117),
                                self.board.radius * 1.25)
-        elif 'p2won':  # Show who won
+        elif 'pblackwon':  # Show who won
             pygame.draw.circle(screen, self.players["black_player"]["color"],
                                (105,
                                 117),

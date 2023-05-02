@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="Cleaning code and comments">
+    <list default="true" id="143d122c-31f7-488c-ade3-8aca5f18491a" name="Changes" comment="Bug fixed in game launching">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/p1won_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/p2won_background.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/othello.py" beforeDir="false" afterPath="$PROJECT_DIR$/othello.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -164,7 +166,8 @@
       <workItem from="1681651777085" duration="10000" />
       <workItem from="1681990581696" duration="1438000" />
       <workItem from="1682081434120" duration="27000" />
-      <workItem from="1682933257902" duration="372000" />
+      <workItem from="1682933257902" duration="408000" />
+      <workItem from="1683013251937" duration="2603000" />
     </task>
     <task id="LOCAL-00001" summary="new launching_background.png with the possibily to choose directly who's starting (AI or user)">
       <created>1678490493955</created>
@@ -278,7 +281,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681992033629</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Bug fixed in game launching">
+      <created>1682933661340</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1682933661340</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -297,10 +307,11 @@
     <MESSAGE value="-&gt; Fixing black starting&#10;-&gt; Fixing review screen" />
     <MESSAGE value="Improving the heuristic method of evaluation of the grid" />
     <MESSAGE value="Cleaning code and comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaning code and comments" />
+    <MESSAGE value="Bug fixed in game launching" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fixed in game launching" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1682933629275" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/othello$main.coverage" NAME="main Coverage Results" MODIFIED="1683015089034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/othello$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1677503180560" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pythonTEST" />
   </component>
 </project>
